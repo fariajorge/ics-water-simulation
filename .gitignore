@@ -1,0 +1,46 @@
+# Node-RED data
+revpi-twin/data/*
+!revpi-twin/data/README.md
+
+# Logs
+*.log
+logs/
+revpi-twin/data/logs/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+env/
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Build artifacts
+*.out
+*.bak
+*.tmp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# OS mounted USB
+/media/*
+
+# Python build files
+*.egg-info/
+dist/
+build/
+
+# Backup files
+*~
