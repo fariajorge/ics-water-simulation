@@ -1,0 +1,12 @@
+services:
+  tank-sim:
+    build: ./app
+    container_name: tank-sim
+    ports:
+      - "5000:5000"
+    networks:
+      - ot_net
+
+networks:
+  ot_net:
+    driver: bridge
