@@ -9,4 +9,4 @@ services:
 
 networks:
   ot_net:
-    driver: bridge
+    external: true
