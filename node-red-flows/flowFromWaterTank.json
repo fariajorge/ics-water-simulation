@@ -1,0 +1,1016 @@
+[
+    {
+        "id": "46c8f951.f61c78",
+        "type": "tab",
+        "label": "WaterLevePid",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "7bb9fba5.da7914",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "6d6b2da0.644644",
+        "type": "ui_tab",
+        "name": "Graph",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ab8e8429.838618",
+        "type": "ui_group",
+        "name": "Floate",
+        "tab": "7bb9fba5.da7914",
+        "order": 3,
+        "disp": true,
+        "width": "4",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "29c328e.2021bd8",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "7bb9fba5.da7914",
+        "order": 2,
+        "disp": true,
+        "width": "4",
+        "collapse": false
+    },
+    {
+        "id": "e99afceb.141ac",
+        "type": "ui_group",
+        "name": "Graph",
+        "tab": "6d6b2da0.644644",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9330a75bb254264e",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "10876df7cf4c21b7",
+        "type": "revpi-server",
+        "host": "localhost",
+        "port": "8000",
+        "user": "",
+        "password": "",
+        "rejectUnauthorized": false,
+        "ca": ""
+    },
+    {
+        "id": "0666437c6a099055",
+        "type": "elasticsearch-config",
+        "name": "plc",
+        "server": "https://158.39.170.10:9200",
+        "timeout": "",
+        "apiVersion": "7.0"
+    },
+    {
+        "id": "fb5abd9.b8efe4",
+        "type": "revpi-single-input",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "inputpin": "float_1",
+        "topic": "",
+        "x": 120,
+        "y": 60,
+        "wires": [
+            [
+                "4d960e2f.1b23d"
+            ]
+        ]
+    },
+    {
+        "id": "410dee11.a0225",
+        "type": "revpi-single-input",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "inputpin": "float_2",
+        "topic": "",
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "3df17050.f1124"
+            ]
+        ]
+    },
+    {
+        "id": "133134bb.ff7b3b",
+        "type": "revpi-single-input",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "inputpin": "float_3",
+        "topic": "",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "fc329d20.5a65a"
+            ]
+        ]
+    },
+    {
+        "id": "e46af76c.c79eb8",
+        "type": "revpi-single-input",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "inputpin": "probe_2",
+        "topic": "",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "ee9d785e.cf4e68"
+            ]
+        ]
+    },
+    {
+        "id": "be7be492.823db8",
+        "type": "revpi-single-input",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "inputpin": "probe_3",
+        "topic": "",
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "587d4f1d.1196d"
+            ]
+        ]
+    },
+    {
+        "id": "440e6c3c.fa9754",
+        "type": "revpi-single-input",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "inputpin": "probe_4",
+        "topic": "",
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "23317e64.19f362"
+            ]
+        ]
+    },
+    {
+        "id": "51e89757.e8dd08",
+        "type": "revpi-single-input",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "inputpin": "pressure_sensor",
+        "topic": "",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "18d4dbc3.b10d94",
+                "40ea16b5.e67118",
+                "7612136d.216c9c",
+                "2d2a46f0bdb24899"
+            ]
+        ]
+    },
+    {
+        "id": "ddefe4e1.f96a48",
+        "type": "revpi-output",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "outputpin": "motor_control_mv",
+        "overwritevalue": false,
+        "outputvalue": "",
+        "x": 1080,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "bbc6f27c.ec7",
+        "type": "revpi-output",
+        "z": "46c8f951.f61c78",
+        "server": "10876df7cf4c21b7",
+        "outputpin": "motor_ss",
+        "overwritevalue": false,
+        "outputvalue": "",
+        "x": 830,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "4276a449.7c8d2c",
+        "type": "inject",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "Stop motor",
+        "payload": "64",
+        "payloadType": "num",
+        "x": 600,
+        "y": 180,
+        "wires": [
+            [
+                "bbc6f27c.ec7"
+            ]
+        ]
+    },
+    {
+        "id": "18d4dbc3.b10d94",
+        "type": "range",
+        "z": "46c8f951.f61c78",
+        "minin": "4070",
+        "maxin": "16200",
+        "minout": "0",
+        "maxout": "100",
+        "action": "scale",
+        "round": true,
+        "property": "payload",
+        "name": "",
+        "x": 360,
+        "y": 380,
+        "wires": [
+            [
+                "f5795071.b4e7d",
+                "48a426d3.2c7038",
+                "6b53b874.e4f7",
+                "e7ff1cbe.e516",
+                "c6f6cf6e7ff49cfd"
+            ]
+        ]
+    },
+    {
+        "id": "293d04f9.d6ba3c",
+        "type": "function",
+        "z": "46c8f951.f61c78",
+        "name": "voltage limiter",
+        "func": "\n\nif (msg.payload < 0) {\n    msg.payload = 0;\n} else if (msg.payload > 8000) {\n    msg.payload = 8000;\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 380,
+        "wires": [
+            [
+                "5117dd329eea340e"
+            ]
+        ]
+    },
+    {
+        "id": "69806254.e2b52c",
+        "type": "debug",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "40ea16b5.e67118",
+        "type": "debug",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "7612136d.216c9c",
+        "type": "function",
+        "z": "46c8f951.f61c78",
+        "name": "linear equation",
+        "func": "\ny = 0.036383 * msg.payload - 31.45\nmsg.payload = y\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 640,
+        "wires": [
+            [
+                "3614fdb3.646732",
+                "69806254.e2b52c"
+            ]
+        ]
+    },
+    {
+        "id": "6b53b874.e4f7",
+        "type": "debug",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 620,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "e7ff1cbe.e516",
+        "type": "PID control",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "target": "30",
+        "kp": "300",
+        "ki": "0.1",
+        "kd": "0.01",
+        "x": 570,
+        "y": 380,
+        "wires": [
+            [
+                "293d04f9.d6ba3c",
+                "edacdd12.221e5"
+            ]
+        ]
+    },
+    {
+        "id": "3df17050.f1124",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "ab8e8429.838618",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Float_MEDIUM",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 400,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "fc329d20.5a65a",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "ab8e8429.838618",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Float_HIGH",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 390,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "ee9d785e.cf4e68",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "ab8e8429.838618",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Probe_LOW",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 390,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "23317e64.19f362",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "ab8e8429.838618",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Probe_HIGH",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 390,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "f5795071.b4e7d",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Water level",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 590,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "587d4f1d.1196d",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "ab8e8429.838618",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Probe_MEDIUM",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 400,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4d960e2f.1b23d",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "ab8e8429.838618",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Float_LOW",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 390,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "edacdd12.221e5",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "PID output",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "20000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 750,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "ef4d5857.ca7a38",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Motor driver mV",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "8000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1100,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "3614fdb3.646732",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Water level in mm",
+        "label": "mm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "700",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 530,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "48a426d3.2c7038",
+        "type": "ui_chart",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "e99afceb.141ac",
+        "order": 0,
+        "width": "0",
+        "height": "0",
+        "label": "chart",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 430,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ef86af8.b4e574",
+        "type": "ui_button",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Start motor",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 610,
+        "y": 140,
+        "wires": [
+            [
+                "bbc6f27c.ec7"
+            ]
+        ]
+    },
+    {
+        "id": "c661a0af.e353e",
+        "type": "ui_button",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Stop motor",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "64",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 610,
+        "y": 100,
+        "wires": [
+            [
+                "bbc6f27c.ec7"
+            ]
+        ]
+    },
+    {
+        "id": "544cbff429924d5e",
+        "type": "ui_button",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Safe shutdown",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 340,
+        "y": 2040,
+        "wires": [
+            [
+                "2d9b7f3ac3358ba3"
+            ]
+        ]
+    },
+    {
+        "id": "2d9b7f3ac3358ba3",
+        "type": "exec",
+        "z": "46c8f951.f61c78",
+        "command": "sudo shutdown now",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 600,
+        "y": 2040,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c6f6cf6e7ff49cfd",
+        "type": "function",
+        "z": "46c8f951.f61c78",
+        "name": "function 1",
+        "func": "// Node-RED Function to log transitions HIGH -> LOW for Probe_LOW and Probe_MEDIUM\n\n// Initialize context storage if not set\n// Node-RED Function node: log HIGH->LOW transitions\n\n// Previous states stored in node context\nlet prevLow = context.get(\"prevLow\");\nlet prevMed = context.get(\"prevMed\");\n\n// Get current probe states and water level from the message\nlet probeLow = msg.probeLow;       // 1 = HIGH, 0 = LOW\nlet probeMed = msg.probeMed;       // 1 = HIGH, 0 = LOW\nlet waterLevel = msg.waterLevel;   // e.g. mm or %\n\nlet logs = [];\nlet now = new Date().toISOString();\n\n// Initialize state on first run\nif (prevLow === undefined) prevLow = probeLow;\nif (prevMed === undefined) prevMed = probeMed;\n\n// Detect falling edges\nif (prevLow === 1 && probeLow === 0) {\n    logs.push({ time: now, probe: \"LOW\", level: waterLevel });\n}\nif (prevMed === 1 && probeMed === 0) {\n    logs.push({ time: now, probe: \"MEDIUM\", level: waterLevel });\n}\n\n// Save current states\ncontext.set(\"prevLow\", probeLow);\ncontext.set(\"prevMed\", probeMed);\n\n// Only output if something happened\nif (logs.length > 0) {\n    msg.payload = logs;\n    return msg;\n} else {\n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started\n\n\n",
+        "finalize": "// Code added here will be run when the\n// node is being stopped or re-deployed.\nconsole.log(\"hei\")",
+        "libs": [],
+        "x": 800,
+        "y": 680,
+        "wires": [
+            [
+                "eabc5a66e31d277b"
+            ]
+        ]
+    },
+    {
+        "id": "eabc5a66e31d277b",
+        "type": "debug",
+        "z": "46c8f951.f61c78",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "e9cab69c695e561f",
+        "type": "inject",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "10",
+        "payloadType": "num",
+        "x": 690,
+        "y": 840,
+        "wires": [
+            [
+                "c6f6cf6e7ff49cfd"
+            ]
+        ]
+    },
+    {
+        "id": "2d2a46f0bdb24899",
+        "type": "ui_gauge",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "group": "29c328e.2021bd8",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Pressure sensor value",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "4000",
+        "max": "16200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 540,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "5117dd329eea340e",
+        "type": "ui_slider",
+        "z": "46c8f951.f61c78",
+        "name": "",
+        "label": "Pump voltage",
+        "tooltip": "",
+        "group": "29c328e.2021bd8",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "8000",
+        "step": "100",
+        "className": "",
+        "x": 860,
+        "y": 540,
+        "wires": [
+            [
+                "ddefe4e1.f96a48",
+                "ef4d5857.ca7a38"
+            ]
+        ]
+    }
+]
