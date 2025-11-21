@@ -1,0 +1,1 @@
+ - Command to check availability of ElasticSearch is the following: curl -u elastic:"<PASSWORD>" http://localhost:9200"
