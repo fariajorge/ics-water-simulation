@@ -5,15 +5,16 @@ import time
 app = Flask(__name__)
 
 # CONFIGURABLE PARAMETERS
-MAX_NATURAL_LEVEL = 50       # Tank naturally stops rising at 50 cm
-PUMP_RATE = 0.7              # Pump raises water level when below natural limit
-LEAK_RATE = 0.2              # Natural leak always happening
-MAX_LEVEL = 100              # Physical tank maximum
+MAX_NATURAL_LEVEL = 50.0    # Tank naturally stops rising at 50 cm
+PUMP_MAX_RATE = 5           # cm per second at 100% power
+LEAK_RATE = 0.5             # cm per second naturally leaking
+MAX_LEVEL = 100.0           # Physical tank maximum
 
 state = {
-    "level_cm": 40.0,
+    "level_cm": 0.0,
     "pressure": 0.20,
-    "pump_on": False,
+    "pump_on": False,        # external enable (from Node-RED)
+    "pump_power": 0.0,       # 0–100, set from dashboard
     "s_low": 0,
     "s_medium": 0,
     "s_high": 0
@@ -30,19 +31,18 @@ def simulation_loop():
     while True:
         lvl = state["level_cm"]
 
-        # Natural leak always applies
+        # 1) Natural leak always applies
         lvl -= LEAK_RATE
 
-        # Pump effect
-        if state["pump_on"]:
-            # Only fills up to MAX_NATURAL_LEVEL
-            if lvl < MAX_NATURAL_LEVEL:
-                lvl += PUMP_RATE
-            else:
-                lvl = MAX_NATURAL_LEVEL  # Clamp at natural fill limit
+        # 2) Pump effect, scaled by pump_power (0–100)
+        if state["pump_on"] and lvl < MAX_NATURAL_LEVEL:
+            power_factor = max(0.0, min(1.0, state["pump_power"] / 100.0))
+            lvl += PUMP_MAX_RATE * power_factor
+            if lvl > MAX_NATURAL_LEVEL:
+                lvl = MAX_NATURAL_LEVEL
 
-        # Physical constraints
-        lvl = max(0, min(MAX_LEVEL, lvl))
+        # 3) Physical constraints
+        lvl = max(0.0, min(MAX_LEVEL, lvl))
 
         state["level_cm"] = lvl
         update_sensors()
@@ -54,10 +54,21 @@ def get_state():
 
 @app.route("/command", methods=["POST"])
 def command():
-    data = request.json
+    data = request.json or {}
     if "pump_on" in data:
         state["pump_on"] = bool(data["pump_on"])
-    return jsonify({"status": "ok", "pump_on": state["pump_on"]})
+    if "pump_power" in data:
+        try:
+            p = float(data["pump_power"])
+        except (TypeError, ValueError):
+            p = 0.0
+        p = max(0.0, min(100.0, p))
+        state["pump_power"] = p
+    return jsonify({
+        "status": "ok",
+        "pump_on": state["pump_on"],
+        "pump_power": state["pump_power"]
+    })
 
 if __name__ == "__main__":
     thread = threading.Thread(target=simulation_loop, daemon=True)

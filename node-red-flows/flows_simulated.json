@@ -1,419 +1,708 @@
 [
-  {
-    "id": "tab_tanksim",
-    "type": "tab",
-    "label": "TankSim",
-    "disabled": false,
-    "info": ""
-  },
-  {
-    "id": "ui_tab_tanksim",
-    "type": "ui_tab",
-    "name": "TankSim",
-    "icon": "dashboard",
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "ui_group_status",
-    "type": "ui_group",
-    "name": "Status",
-    "tab": "ui_tab_tanksim",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "ui_group_sensors",
-    "type": "ui_group",
-    "name": "Sensors",
-    "tab": "ui_tab_tanksim",
-    "order": 2,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "ui_group_control",
-    "type": "ui_group",
-    "name": "Control",
-    "tab": "ui_tab_tanksim",
-    "order": 3,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-
-  {
-    "id": "inject_poll",
-    "type": "inject",
-    "z": "tab_tanksim",
-    "name": "Poll tank every second",
-    "props": [
-      {
-        "p": "payload"
-      }
-    ],
-    "repeat": "1",
-    "crontab": "",
-    "once": true,
-    "onceDelay": "1",
-    "topic": "",
-    "payload": "",
-    "payloadType": "date",
-    "x": 150,
-    "y": 80,
-    "wires": [["http_get_state"]]
-  },
-  {
-    "id": "http_get_state",
-    "type": "http request",
-    "z": "tab_tanksim",
-    "name": "GET /state",
-    "method": "GET",
-    "ret": "obj",
-    "paytoqs": "ignore",
-    "url": "http://tank-sim:5000/state",
-    "tls": "",
-    "persist": false,
-    "proxy": "",
-    "authType": "",
-    "senderr": false,
-    "x": 380,
-    "y": 80,
-    "wires": [
-      [
-        "fn_level",
-        "fn_pressure",
-        "fn_pump_status",
-        "fn_s_low",
-        "fn_s_medium",
-        "fn_s_high"
-      ]
-    ]
-  },
-
-  {
-    "id": "fn_level",
-    "type": "function",
-    "z": "tab_tanksim",
-    "name": "Extract level",
-    "func": "msg.payload = msg.payload.level_cm;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 620,
-    "y": 40,
-    "wires": [["g_level","chart_level"]]
-  },
-  {
-    "id": "fn_pressure",
-    "type": "function",
-    "z": "tab_tanksim",
-    "name": "Extract pressure",
-    "func": "msg.payload = msg.payload.pressure;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 640,
-    "y": 90,
-    "wires": [["g_pressure"]]
-  },
-  {
-    "id": "fn_pump_status",
-    "type": "function",
-    "z": "tab_tanksim",
-    "name": "Extract pump_on",
-    "func": "msg.payload = msg.payload.pump_on ? \"ON\" : \"OFF\";\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 650,
-    "y": 140,
-    "wires": [["txt_pump"]]
-  },
-  {
-    "id": "fn_s_low",
-    "type": "function",
-    "z": "tab_tanksim",
-    "name": "Sensor LOW",
-    "func": "msg.payload = msg.payload.s_low;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 630,
-    "y": 200,
-    "wires": [["g_s_low"]]
-  },
-  {
-    "id": "fn_s_medium",
-    "type": "function",
-    "z": "tab_tanksim",
-    "name": "Sensor MED",
-    "func": "msg.payload = msg.payload.s_medium;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 640,
-    "y": 250,
-    "wires": [["g_s_med"]]
-  },
-  {
-    "id": "fn_s_high",
-    "type": "function",
-    "z": "tab_tanksim",
-    "name": "Sensor HIGH",
-    "func": "msg.payload = msg.payload.s_high;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 640,
-    "y": 300,
-    "wires": [["g_s_high"]]
-  },
-
-  {
-    "id": "g_level",
-    "type": "ui_gauge",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_status",
-    "order": 1,
-    "width": 6,
-    "height": 4,
-    "gtype": "gage",
-    "title": "Water level (cm)",
-    "label": "cm",
-    "format": "{{value}}",
-    "min": 0,
-    "max": 100,
-    "colors": ["#00b500","#e6e600","#ca3838"],
-    "seg1": "",
-    "seg2": "",
-    "x": 880,
-    "y": 40,
-    "wires": []
-  },
-  {
-    "id": "g_pressure",
-    "type": "ui_gauge",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_status",
-    "order": 2,
-    "width": 6,
-    "height": 4,
-    "gtype": "gage",
-    "title": "Pressure",
-    "label": "bar",
-    "format": "{{value}}",
-    "min": 0,
-    "max": 1,
-    "colors": ["#00b500","#e6e600","#ca3838"],
-    "seg1": "",
-    "seg2": "",
-    "x": 880,
-    "y": 90,
-    "wires": []
-  },
-  {
-    "id": "txt_pump",
-    "type": "ui_text",
-    "z": "tab_tanksim",
-    "group": "ui_group_status",
-    "order": 3,
-    "width": 6,
-    "height": 1,
-    "name": "",
-    "label": "Pump status",
-    "format": "{{msg.payload}}",
-    "layout": "row-spread",
-    "x": 890,
-    "y": 140,
-    "wires": []
-  },
-  {
-    "id": "chart_level",
-    "type": "ui_chart",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_status",
-    "order": 4,
-    "width": 6,
-    "height": 4,
-    "label": "Level history",
-    "chartType": "line",
-    "legend": "false",
-    "xformat": "HH:mm:ss",
-    "interpolate": "linear",
-    "nodata": "no data",
-    "dot": false,
-    "ymin": "0",
-    "ymax": "100",
-    "removeOlder": "60",
-    "removeOlderPoints": "",
-    "removeOlderUnit": "60",
-    "cutout": 0,
-    "useOneColor": false,
-    "useUTC": false,
-    "colors": ["#1f77b4","#aec7e8","#ff7f0e"],
-    "outputs": 1,
-    "useDifferentColor": false,
-    "className": "",
-    "x": 900,
-    "y": 190,
-    "wires": [[]]
-  },
-
-  {
-    "id": "g_s_low",
-    "type": "ui_gauge",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_sensors",
-    "order": 1,
-    "width": 2,
-    "height": 2,
-    "gtype": "donut",
-    "title": "LOW",
-    "label": "",
-    "format": "{{value}}",
-    "min": 0,
-    "max": 1,
-    "colors": ["#555555","#00b500","#ca3838"],
-    "seg1": "",
-    "seg2": "",
-    "x": 890,
-    "y": 240,
-    "wires": []
-  },
-  {
-    "id": "g_s_med",
-    "type": "ui_gauge",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_sensors",
-    "order": 2,
-    "width": 2,
-    "height": 2,
-    "gtype": "donut",
-    "title": "MED",
-    "label": "",
-    "format": "{{value}}",
-    "min": 0,
-    "max": 1,
-    "colors": ["#555555","#00b500","#ca3838"],
-    "seg1": "",
-    "seg2": "",
-    "x": 890,
-    "y": 290,
-    "wires": []
-  },
-  {
-    "id": "g_s_high",
-    "type": "ui_gauge",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_sensors",
-    "order": 3,
-    "width": 2,
-    "height": 2,
-    "gtype": "donut",
-    "title": "HIGH",
-    "label": "",
-    "format": "{{value}}",
-    "min": 0,
-    "max": 1,
-    "colors": ["#555555","#00b500","#ca3838"],
-    "seg1": "",
-    "seg2": "",
-    "x": 890,
-    "y": 340,
-    "wires": []
-  },
-
-  {
-    "id": "btn_pump_on",
-    "type": "ui_button",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_control",
-    "order": 1,
-    "width": 3,
-    "height": 1,
-    "passthru": false,
-    "label": "Pump ON",
-    "tooltip": "",
-    "color": "",
-    "bgcolor": "",
-    "className": "",
-    "icon": "play_arrow",
-    "payload": "true",
-    "payloadType": "bool",
-    "topic": "",
-    "x": 180,
-    "y": 360,
-    "wires": [["fn_cmd_wrap"]]
-  },
-  {
-    "id": "btn_pump_off",
-    "type": "ui_button",
-    "z": "tab_tanksim",
-    "name": "",
-    "group": "ui_group_control",
-    "order": 2,
-    "width": 3,
-    "height": 1,
-    "passthru": false,
-    "label": "Pump OFF",
-    "tooltip": "",
-    "color": "",
-    "bgcolor": "",
-    "className": "",
-    "icon": "stop",
-    "payload": "false",
-    "payloadType": "bool",
-    "topic": "",
-    "x": 190,
-    "y": 410,
-    "wires": [["fn_cmd_wrap"]]
-  },
-  {
-    "id": "fn_cmd_wrap",
-    "type": "function",
-    "z": "tab_tanksim",
-    "name": "Wrap pump_on command",
-    "func": "msg.headers = {\"Content-Type\":\"application/json\"};\nmsg.payload = JSON.stringify({ pump_on: msg.payload });\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 460,
-    "y": 385,
-    "wires": [["http_command"]]
-  },
-  {
-    "id": "http_command",
-    "type": "http request",
-    "z": "tab_tanksim",
-    "name": "POST /command",
-    "method": "POST",
-    "ret": "obj",
-    "paytoqs": "ignore",
-    "url": "http://tank-sim:5000/command",
-    "tls": "",
-    "persist": false,
-    "proxy": "",
-    "authType": "",
-    "senderr": false,
-    "x": 710,
-    "y": 385,
-    "wires": [[]]
-  }
+    {
+        "id": "3b1f49c9a3990e6b",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "tab_tanksim",
+        "type": "tab",
+        "label": "TankSim",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ui_tab_tanksim",
+        "type": "ui_tab",
+        "name": "TankSim",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ui_group_status",
+        "type": "ui_group",
+        "name": "Status",
+        "tab": "ui_tab_tanksim",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_sensors",
+        "type": "ui_group",
+        "name": "Sensors",
+        "tab": "ui_tab_tanksim",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_control",
+        "type": "ui_group",
+        "name": "Control",
+        "tab": "ui_tab_tanksim",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "6dcda594da59b4f7",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "inject_poll",
+        "type": "inject",
+        "z": "tab_tanksim",
+        "name": "Poll tank every second",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "http_get_state"
+            ]
+        ]
+    },
+    {
+        "id": "http_get_state",
+        "type": "http request",
+        "z": "tab_tanksim",
+        "name": "GET /state",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://tank-sim:5000/state",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 220,
+        "wires": [
+            [
+                "fn_level",
+                "fn_pressure",
+                "fn_pump_status",
+                "fn_s_low",
+                "fn_s_medium",
+                "fn_s_high",
+                "6da3e238f39f9fed"
+            ]
+        ]
+    },
+    {
+        "id": "fn_level",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Extract level",
+        "func": "msg.payload = msg.payload.level_cm;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 100,
+        "wires": [
+            [
+                "g_level",
+                "chart_level"
+            ]
+        ]
+    },
+    {
+        "id": "fn_pressure",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Extract pressure",
+        "func": "msg.payload = msg.payload.pressure;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 140,
+        "wires": [
+            [
+                "g_pressure"
+            ]
+        ]
+    },
+    {
+        "id": "fn_pump_status",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Extract pump_on",
+        "func": "msg.payload = msg.payload.pump_on ? \"ON\" : \"OFF\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 180,
+        "wires": [
+            [
+                "txt_pump"
+            ]
+        ]
+    },
+    {
+        "id": "fn_s_low",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Sensor LOW",
+        "func": "msg.payload = msg.payload.s_low;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 630,
+        "y": 220,
+        "wires": [
+            [
+                "g_s_low"
+            ]
+        ]
+    },
+    {
+        "id": "fn_s_medium",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Sensor MED",
+        "func": "msg.payload = msg.payload.s_medium;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 630,
+        "y": 260,
+        "wires": [
+            [
+                "g_s_med"
+            ]
+        ]
+    },
+    {
+        "id": "fn_s_high",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Sensor HIGH",
+        "func": "msg.payload = msg.payload.s_high;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 630,
+        "y": 300,
+        "wires": [
+            [
+                "g_s_high"
+            ]
+        ]
+    },
+    {
+        "id": "g_level",
+        "type": "ui_gauge",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_status",
+        "order": 1,
+        "width": 6,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Water level (cm)",
+        "label": "cm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 920,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "g_pressure",
+        "type": "ui_gauge",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_status",
+        "order": 2,
+        "width": 6,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Pressure",
+        "label": "bar",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 1,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 900,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "txt_pump",
+        "type": "ui_text",
+        "z": "tab_tanksim",
+        "group": "ui_group_status",
+        "order": 3,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "Pump status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 910,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "chart_level",
+        "type": "ui_chart",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_status",
+        "order": 4,
+        "width": 6,
+        "height": 4,
+        "label": "Level ",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "no data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "60",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 890,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "g_s_low",
+        "type": "ui_gauge",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_sensors",
+        "order": 1,
+        "width": 2,
+        "height": 2,
+        "gtype": "donut",
+        "title": "LOW",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 1,
+        "colors": [
+            "#555555",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 890,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "g_s_med",
+        "type": "ui_gauge",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_sensors",
+        "order": 2,
+        "width": 2,
+        "height": 2,
+        "gtype": "donut",
+        "title": "MED",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 1,
+        "colors": [
+            "#555555",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 890,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "g_s_high",
+        "type": "ui_gauge",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_sensors",
+        "order": 3,
+        "width": 2,
+        "height": 2,
+        "gtype": "donut",
+        "title": "HIGH",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 1,
+        "colors": [
+            "#555555",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 890,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "btn_pump_on",
+        "type": "ui_button",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_control",
+        "order": 1,
+        "width": 3,
+        "height": 1,
+        "passthru": false,
+        "label": "Pump ON",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "play_arrow",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 100,
+        "y": 520,
+        "wires": [
+            [
+                "fn_cmd_wrap"
+            ]
+        ]
+    },
+    {
+        "id": "btn_pump_off",
+        "type": "ui_button",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_control",
+        "order": 2,
+        "width": 3,
+        "height": 1,
+        "passthru": false,
+        "label": "Pump OFF",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "stop",
+        "payload": "false",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 110,
+        "y": 570,
+        "wires": [
+            [
+                "fn_cmd_wrap"
+            ]
+        ]
+    },
+    {
+        "id": "fn_cmd_wrap",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Wrap pump_on command",
+        "func": "msg.headers = {\"Content-Type\":\"application/json\"};\nmsg.payload = JSON.stringify({ pump_on: msg.payload });\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "http_command"
+            ]
+        ]
+    },
+    {
+        "id": "http_command",
+        "type": "http request",
+        "z": "tab_tanksim",
+        "name": "POST /command",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://tank-sim:5000/command",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 650,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8de1e67cc59e2bcc",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Pump power command",
+        "func": "let val = Number(msg.payload);\nif (isNaN(val)) val = 0;\nif (val < 0) val = 0;\nif (val > 100) val = 100;\n\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({ pump_power: val });\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 620,
+        "wires": [
+            [
+                "http_command"
+            ]
+        ]
+    },
+    {
+        "id": "8d630d049993fc88",
+        "type": "ui_slider",
+        "z": "tab_tanksim",
+        "name": "",
+        "label": "Pump power",
+        "tooltip": "",
+        "group": "ui_group_control",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "className": "",
+        "x": 110,
+        "y": 620,
+        "wires": [
+            [
+                "8de1e67cc59e2bcc"
+            ]
+        ]
+    },
+    {
+        "id": "6da3e238f39f9fed",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Pump power value",
+        "func": "// /state returns an object with pump_power 0–100\nvar p = msg.payload.pump_power;\nif (p === undefined || p === null) {\n    p = 0;\n}\nmsg.payload = Number(p);   // chart expects a number\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 340,
+        "wires": [
+            [
+                "f997c5fd76e87d6e"
+            ]
+        ]
+    },
+    {
+        "id": "f997c5fd76e87d6e",
+        "type": "ui_chart",
+        "z": "tab_tanksim",
+        "name": "",
+        "group": "ui_group_control",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "Pump power",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 910,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    }
 ]
-
