@@ -55,8 +55,13 @@ def get_state():
 @app.route("/command", methods=["POST"])
 def command():
     data = request.json or {}
+
     if "pump_on" in data:
         state["pump_on"] = bool(data["pump_on"])
+        # If pump is turned off, force pump_power to 0
+        if not state["pump_on"]:
+            state["pump_power"] = 0.0
+
     if "pump_power" in data:
         try:
             p = float(data["pump_power"])
@@ -64,6 +69,7 @@ def command():
             p = 0.0
         p = max(0.0, min(100.0, p))
         state["pump_power"] = p
+
     return jsonify({
         "status": "ok",
         "pump_on": state["pump_on"],
