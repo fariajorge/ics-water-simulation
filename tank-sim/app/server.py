@@ -14,7 +14,7 @@ state = {
     "level_cm": 0.0,
     "pressure": 0.20,
     "pump_on": False,        # external enable (from Node-RED)
-    "pump_power": 0.0,       # 0–100, set from dashboard
+    "pump_power": 0,         # 0–100, set from dashboard
     "s_low": 0,
     "s_medium": 0,
     "s_high": 0
