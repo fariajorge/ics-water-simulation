@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.7
+    container_name: elkstack-wms
+
+    environment:
+      # Run Elasticsearch as a single-node cluster
+      - discovery.type=single-node
+
+      # Enable Elasticsearch security (required in v8+)
+      - xpack.security.enabled=true
+
+      # Disable TLS on HTTP layer for easier curl testing
+      - xpack.security.http.ssl.enabled=false
+
+      # Predefine the password of the "elastic" superuser
+      # You may replace this value with a stronger password
+      - ELASTIC_PASSWORD=P@ssw0rd
+
+      # Set JVM heap (adjust based on your server hardware)
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+
+    ulimits:
+      memlock:
+        soft: -1   # Prevent memory swapping (recommended for ES)
+        hard: -1
+
+    volumes:
+      # Persistent data storage for Elasticsearch
+      - es-data:/usr/share/elasticsearch/data
+
+    ports:
+      # Expose REST API port
+      - "9200:9200"
+      # Expose transport port (node-to-node communication)
+      - "9300:9300"
+
+    restart: unless-stopped   # Ensure the service restarts on reboot
+
+volumes:
+  es-data:

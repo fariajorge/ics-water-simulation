@@ -1,0 +1,2 @@
+# Test rule to detect any HTTP traffic (for lab use only)
+alert http any any -> any any (msg:"TEST RULE - HTTP traffic detected"; sid:1000001; rev:1;)
