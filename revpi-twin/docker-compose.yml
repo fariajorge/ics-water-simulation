@@ -2,6 +2,7 @@ services:
   revpi-twin:
     image: nodered/node-red:latest
     container_name: revpi-twin
+    restart: unless-stopped
     ports:
       - "1880:1880"
     volumes:
