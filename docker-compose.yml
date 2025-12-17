@@ -1,6 +1,18 @@
 name: ics-water-simulation
 
 services:
+  
+  tank-sim:
+    build: ./tank-sim/app
+    container_name: tank-sim
+    restart: unless-stopped
+    networks:
+      ot_hmi_net:
+        ipv4_address: 169.254.45.60
+    # keep ports closed unless you truly need host access
+    # ports:
+    #   - "5000:5000"
+
   revpi-twin:
     image: nodered/node-red:latest
     container_name: revpi-twin
@@ -12,7 +24,7 @@ services:
         ipv4_address: 158.39.170.5
     volumes:
       - ./node-red-flows:/data
-    
+      
 
 networks:
   ot_hmi_net:
