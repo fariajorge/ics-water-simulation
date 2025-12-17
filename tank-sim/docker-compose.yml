@@ -2,6 +2,7 @@ services:
   tank-sim:
     build: ./app
     container_name: tank-sim
+    restart: unless-stopped
     ports:
       - "5000:5000"
     networks:
