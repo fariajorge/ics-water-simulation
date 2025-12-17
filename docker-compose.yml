@@ -1,0 +1,16 @@
+name: ics-water-simulation
+
+services: {}
+
+networks:
+  ot_hmi_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 169.254.45.0/24
+
+  rm_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 158.39.170.0/24
