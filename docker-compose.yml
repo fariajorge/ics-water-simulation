@@ -1,6 +1,18 @@
 name: ics-water-simulation
 
-services: {}
+services:
+  revpi-twin:
+    image: nodered/node-red:latest
+    container_name: revpi-twin
+    restart: unless-stopped
+    networks:
+      ot_hmi_net:
+        ipv4_address: 169.254.45.52
+      rm_net:
+        ipv4_address: 158.39.170.5
+    volumes:
+      - ./node-red-flows:/data
+    
 
 networks:
   ot_hmi_net:
