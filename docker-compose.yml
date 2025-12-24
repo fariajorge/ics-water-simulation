@@ -22,7 +22,7 @@ services:
       rm_net:
         ipv4_address: 158.39.170.5
     volumes:
-      - ./node-red-flows:/data
+      - ./revpi-twin/data:/data
       
   hmi:
     image: nginx:alpine
