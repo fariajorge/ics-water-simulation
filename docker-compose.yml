@@ -1,7 +1,6 @@
 name: ics-water-simulation
 
 services:
-  
   tank-sim:
     build: ./tank-sim/app
     container_name: tank-sim
@@ -25,6 +24,19 @@ services:
     volumes:
       - ./node-red-flows:/data
       
+  hmi:
+    image: nginx:alpine
+    container_name: hmi
+    restart: unless-stopped
+    depends_on:
+      - revpi-twin
+    networks:
+      ot_hmi_net:
+        ipv4_address: 169.254.45.56
+    ports:
+      - "8080:80"
+    volumes:
+      - ./hmi/nginx.conf:/etc/nginx/nginx.conf:ro
 
 networks:
   ot_hmi_net:
