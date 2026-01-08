@@ -48,6 +48,11 @@ def simulation_loop():
 
         # 3) Physical constraints
         lvl = max(0.0, min(MAX_LEVEL, lvl))
+        
+        # HARD SAFETY: physical tank full -> force pump OFF
+        if lvl >= MAX_LEVEL:
+            state["pump_on"] = False
+            state["pump_power"] = 0.0
 
         state["level_cm"] = lvl
         update_sensors()
