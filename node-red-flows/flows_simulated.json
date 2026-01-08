@@ -53,7 +53,8 @@
                 "default": "#0094CE",
                 "baseColor": "#0094CE",
                 "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": false
+                "edited": true,
+                "reset": false
             },
             "darkTheme": {
                 "default": "#097479",
@@ -193,7 +194,9 @@
                 "fn_s_high",
                 "6da3e238f39f9fed",
                 "151e0bc536faf22d",
-                "35b79d854f9f3c9b"
+                "35b79d854f9f3c9b",
+                "bf84db3570ec1ea5",
+                "2228b6ad57bc590a"
             ]
         ]
     },
@@ -376,8 +379,8 @@
         "type": "ui_chart",
         "z": "tab_tanksim",
         "name": "",
-        "group": "ui_group_status",
-        "order": 4,
+        "group": "ui_group_control",
+        "order": 7,
         "width": 6,
         "height": 4,
         "label": "Level ",
@@ -513,7 +516,7 @@
         "payloadType": "bool",
         "topic": "",
         "topicType": "str",
-        "x": 600,
+        "x": 800,
         "y": 600,
         "wires": [
             [
@@ -540,7 +543,7 @@
         "payload": "false",
         "payloadType": "bool",
         "topic": "",
-        "x": 610,
+        "x": 810,
         "y": 650,
         "wires": [
             [
@@ -560,7 +563,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 870,
+        "x": 1070,
         "y": 620,
         "wires": [
             [
@@ -618,7 +621,7 @@
         "label": "Pump power",
         "tooltip": "",
         "group": "ui_group_control",
-        "order": 2,
+        "order": 3,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -629,7 +632,7 @@
         "max": "100",
         "step": 1,
         "className": "",
-        "x": 850,
+        "x": 870,
         "y": 460,
         "wires": [
             []
@@ -711,7 +714,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 640,
+        "x": 660,
         "y": 460,
         "wires": [
             [
@@ -724,15 +727,150 @@
         "type": "function",
         "z": "tab_tanksim",
         "name": "Auto pump controller",
-        "func": "// Auto pump controller, runs on every /state poll\n\nconst TARGET = 50;      // cm\nconst FAR_BAND = 10;    // cm below target where we start ramping\nconst BASE_HOLD = 25;   // minimum power near target to fight leak\n\nlet s = msg.payload;\n\nif (!s.pump_on) {\n    // Pump is off, do not send anything\n    return null;\n}\n\nlet level = s.level_cm;\nlet error = TARGET - level;   // cm below target\n\nlet power;\n\n// At or above target: cut power completely\nif (error <= 0) {\n    power = 0;\n\n} else if (error >= FAR_BAND) {\n    // Far from target: full power, we want to get there quickly\n    power = 100;\n\n} else {\n    // Close to target: linear ramp between BASE_HOLD and 100\n    // error in (0..FAR_BAND) -> x in (0..1)\n    let x = error / FAR_BAND;\n\n    // Linear ramp, not squared, so it does not drop too early\n    power = BASE_HOLD + (100 - BASE_HOLD) * x;\n}\n\n// Integers only\npower = Math.round(power);\nif (power < 0) power = 0;\nif (power > 100) power = 100;\n\n// Build command for backend\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({\n    pump_on: true,\n    pump_power: power\n});\n\nreturn msg;\n",
+        "func": "// Auto pump controller, runs on every /state poll\nlet s = msg.payload;\n\n// target comes from TankSim state\nlet TARGET = s.target_cm;\nif (TARGET === undefined || TARGET === null) TARGET = 50;\n\nconst FAR_BAND = 10;    // cm below target where we start ramping\nconst BASE_HOLD = 25;   // minimum power near target to fight leak\n\n\nif (!s.pump_on) {\n    // Pump is off, do not send anything\n    return null;\n}\n\nlet level = s.level_cm;\nlet error = TARGET - level;   // cm below target\n\nlet power;\n\n// At or above target: cut power completely\nif (error <= 0) {\n    power = 0;\n\n} else if (error >= FAR_BAND) {\n    // Far from target: full power, we want to get there quickly\n    power = 100;\n\n} else {\n    // Close to target: linear ramp between BASE_HOLD and 100\n    // error in (0..FAR_BAND) -> x in (0..1)\n    let x = error / FAR_BAND;\n\n    // Linear ramp, not squared, so it does not drop too early\n    power = BASE_HOLD + (100 - BASE_HOLD) * x;\n}\n\n// Integers only\npower = Math.round(power);\nif (power < 0) power = 0;\nif (power > 100) power = 100;\n\n// Build command for backend\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({\n    pump_on: true,\n    pump_power: power\n});\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 640,
-        "y": 540,
+        "x": 660,
+        "y": 500,
+        "wires": [
+            [
+                "http_command"
+            ]
+        ]
+    },
+    {
+        "id": "5cb648e4f6c08bcb",
+        "type": "ui_slider",
+        "z": "tab_tanksim",
+        "name": "",
+        "label": "Leak rate (cm/s)",
+        "tooltip": "",
+        "group": "ui_group_control",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": 10,
+        "step": "0.5",
+        "className": "",
+        "x": 820,
+        "y": 380,
+        "wires": [
+            [
+                "703e244161134280"
+            ]
+        ]
+    },
+    {
+        "id": "703e244161134280",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Wrap leak_rate command",
+        "func": "const leak_rate = Number(msg.payload);\n\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({ leak_rate });\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 380,
+        "wires": [
+            [
+                "http_command"
+            ]
+        ]
+    },
+    {
+        "id": "bf84db3570ec1ea5",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "leak_rate",
+        "func": "msg.payload = msg.payload.leak_rate;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 380,
+        "wires": [
+            [
+                "5cb648e4f6c08bcb"
+            ]
+        ]
+    },
+    {
+        "id": "5fc66af6f253a273",
+        "type": "ui_numeric",
+        "z": "tab_tanksim",
+        "name": "",
+        "label": "Target (cm)",
+        "tooltip": "",
+        "group": "ui_group_control",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "className": "",
+        "x": 850,
+        "y": 420,
+        "wires": [
+            [
+                "00e581b954003022"
+            ]
+        ]
+    },
+    {
+        "id": "2228b6ad57bc590a",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Extract target_cm",
+        "func": "msg.payload = msg.payload.target_cm;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 420,
+        "wires": [
+            [
+                "5fc66af6f253a273"
+            ]
+        ]
+    },
+    {
+        "id": "00e581b954003022",
+        "type": "function",
+        "z": "tab_tanksim",
+        "name": "Wrap target command",
+        "func": "const t = Number(msg.payload);\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({ target_cm: t });\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 420,
         "wires": [
             [
                 "http_command"
