@@ -1,18 +1,48 @@
 [
     {
-        "id": "5de552a640b86a58",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "tab_tanksim",
+        "id": "751db66ae21c7d98",
         "type": "tab",
         "label": "TankSim",
         "disabled": false,
         "info": ""
+    },
+    {
+        "id": "ui_tab_tanksim",
+        "type": "ui_tab",
+        "name": "TankSim",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ui_group_status",
+        "type": "ui_group",
+        "name": "Status",
+        "tab": "ui_tab_tanksim",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_sensors",
+        "type": "ui_group",
+        "name": "Sensors",
+        "tab": "ui_tab_tanksim",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_control",
+        "type": "ui_group",
+        "name": "Control",
+        "tab": "ui_tab_tanksim",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
     },
     {
         "id": "6dcda594da59b4f7",
@@ -112,47 +142,9 @@
         }
     },
     {
-        "id": "ui_tab_tanksim",
-        "type": "ui_tab",
-        "name": "TankSim",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "ui_group_status",
-        "type": "ui_group",
-        "name": "Status",
-        "tab": "ui_tab_tanksim",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "ui_group_sensors",
-        "type": "ui_group",
-        "name": "Sensors",
-        "tab": "ui_tab_tanksim",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "ui_group_control",
-        "type": "ui_group",
-        "name": "Control",
-        "tab": "ui_tab_tanksim",
-        "order": 3,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "inject_poll",
+        "id": "560bb83d9eb7f984",
         "type": "inject",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Poll tank every second",
         "props": [
             {
@@ -170,14 +162,14 @@
         "y": 220,
         "wires": [
             [
-                "http_get_state"
+                "d49ff797c27c2a17"
             ]
         ]
     },
     {
-        "id": "http_get_state",
+        "id": "d49ff797c27c2a17",
         "type": "http request",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "GET /state",
         "method": "GET",
         "ret": "obj",
@@ -194,24 +186,24 @@
         "y": 220,
         "wires": [
             [
-                "fn_level",
-                "fn_pressure",
-                "fn_pump_status",
-                "fn_s_low",
-                "fn_s_medium",
-                "fn_s_high",
-                "6da3e238f39f9fed",
-                "151e0bc536faf22d",
-                "35b79d854f9f3c9b",
-                "bf84db3570ec1ea5",
-                "2228b6ad57bc590a"
+                "b750b421178c8df2",
+                "96b6fed8b6e5ad45",
+                "9716583720958867",
+                "b4f9363c220ee3a2",
+                "1a4290a975b89707",
+                "418ffd61282cd35e",
+                "2f8b288e380358ef",
+                "6aa2b0ada9c5997b",
+                "64b1ea7da227b4cd",
+                "131eaf84f91ab309",
+                "228d88becef0588a"
             ]
         ]
     },
     {
-        "id": "fn_level",
+        "id": "b750b421178c8df2",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Extract level",
         "func": "msg.payload = msg.payload.level_cm;\nreturn msg;",
         "outputs": 1,
@@ -223,15 +215,15 @@
         "y": 100,
         "wires": [
             [
-                "g_level",
-                "chart_level"
+                "b3132a1fe42473bb",
+                "226df10d057e594b"
             ]
         ]
     },
     {
-        "id": "fn_pressure",
+        "id": "96b6fed8b6e5ad45",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Extract pressure",
         "func": "msg.payload = msg.payload.pressure;\nreturn msg;",
         "outputs": 1,
@@ -243,14 +235,14 @@
         "y": 140,
         "wires": [
             [
-                "g_pressure"
+                "46ff79b211e8996a"
             ]
         ]
     },
     {
-        "id": "fn_pump_status",
+        "id": "9716583720958867",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Extract pump_on",
         "func": "msg.payload = msg.payload.pump_on ? \"ON\" : \"OFF\";\nreturn msg;",
         "outputs": 1,
@@ -262,14 +254,14 @@
         "y": 180,
         "wires": [
             [
-                "txt_pump"
+                "3f833c96c5d50917"
             ]
         ]
     },
     {
-        "id": "fn_s_low",
+        "id": "b4f9363c220ee3a2",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Sensor LOW",
         "func": "msg.payload = msg.payload.s_low;\nreturn msg;",
         "outputs": 1,
@@ -278,14 +270,14 @@
         "y": 220,
         "wires": [
             [
-                "g_s_low"
+                "3125053d17bc0709"
             ]
         ]
     },
     {
-        "id": "fn_s_medium",
+        "id": "1a4290a975b89707",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Sensor MED",
         "func": "msg.payload = msg.payload.s_medium;\nreturn msg;",
         "outputs": 1,
@@ -294,14 +286,14 @@
         "y": 260,
         "wires": [
             [
-                "g_s_med"
+                "1f6ccc93c44946e7"
             ]
         ]
     },
     {
-        "id": "fn_s_high",
+        "id": "418ffd61282cd35e",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Sensor HIGH",
         "func": "msg.payload = msg.payload.s_high;\nreturn msg;",
         "outputs": 1,
@@ -310,14 +302,14 @@
         "y": 300,
         "wires": [
             [
-                "g_s_high"
+                "f4e21688aa11e0ba"
             ]
         ]
     },
     {
-        "id": "fn_cmd_wrap",
+        "id": "291b526d39979cce",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Wrap pump_on command",
         "func": "let on = (msg.payload === true || msg.payload === 1 || msg.payload === \"on\");\n\nlet body = {\n    pump_on: on,\n    pump_power: on ? 100 : 0\n};\n\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify(body);\nreturn msg;\n",
         "outputs": 1,
@@ -327,17 +319,17 @@
         "finalize": "",
         "libs": [],
         "x": 1070,
-        "y": 620,
+        "y": 600,
         "wires": [
             [
-                "http_command"
+                "a8e63b5e120b0412"
             ]
         ]
     },
     {
-        "id": "http_command",
+        "id": "3cb832c68ce2cd85",
         "type": "http request",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "POST /command",
         "method": "POST",
         "ret": "obj",
@@ -350,16 +342,16 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 1350,
-        "y": 560,
+        "x": 1530,
+        "y": 540,
         "wires": [
             []
         ]
     },
     {
-        "id": "8de1e67cc59e2bcc",
+        "id": "d1d4eef678a9836c",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Pump power command",
         "func": "let val = Number(msg.payload);\nif (isNaN(val)) val = 0;\nif (val < 0) val = 0;\nif (val > 100) val = 100;\n\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({ pump_power: val });\nreturn msg;\n",
         "outputs": 1,
@@ -372,14 +364,14 @@
         "y": 460,
         "wires": [
             [
-                "http_command"
+                "a8e63b5e120b0412"
             ]
         ]
     },
     {
-        "id": "6da3e238f39f9fed",
+        "id": "2f8b288e380358ef",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Pump power value",
         "func": "// /state returns an object with pump_power 0–100\nvar p = msg.payload.pump_power;\nif (p === undefined || p === null) {\n    p = 0;\n}\nmsg.payload = Number(p);   // chart expects a number\nreturn msg;\n",
         "outputs": 1,
@@ -392,14 +384,14 @@
         "y": 340,
         "wires": [
             [
-                "f997c5fd76e87d6e"
+                "c41d4c8f123869b8"
             ]
         ]
     },
     {
-        "id": "151e0bc536faf22d",
+        "id": "6aa2b0ada9c5997b",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Pump power display",
         "func": "// pull pump_power from state into slider\nmsg.payload = msg.payload.pump_power;\nreturn msg;\n",
         "outputs": 1,
@@ -412,14 +404,14 @@
         "y": 460,
         "wires": [
             [
-                "8d630d049993fc88"
+                "e4d21d3192fd255d"
             ]
         ]
     },
     {
-        "id": "35b79d854f9f3c9b",
+        "id": "64b1ea7da227b4cd",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Auto pump controller",
         "func": "// Auto pump controller, runs on every /state poll\nlet s = msg.payload;\n\n// target comes from TankSim state\nlet TARGET = s.target_cm;\nif (TARGET === undefined || TARGET === null) TARGET = 50;\n\nconst FAR_BAND = 10;    // cm below target where we start ramping\nconst BASE_HOLD = 25;   // minimum power near target to fight leak\n\n\nif (!s.pump_on) {\n    // Pump is off, do not send anything\n    return null;\n}\n\nlet level = s.level_cm;\nlet error = TARGET - level;   // cm below target\n\nlet power;\n\n// At or above target: cut power completely\nif (error <= 0) {\n    power = 0;\n\n} else if (error >= FAR_BAND) {\n    // Far from target: full power, we want to get there quickly\n    power = 100;\n\n} else {\n    // Close to target: linear ramp between BASE_HOLD and 100\n    // error in (0..FAR_BAND) -> x in (0..1)\n    let x = error / FAR_BAND;\n\n    // Linear ramp, not squared, so it does not drop too early\n    power = BASE_HOLD + (100 - BASE_HOLD) * x;\n}\n\n// Integers only\npower = Math.round(power);\nif (power < 0) power = 0;\nif (power > 100) power = 100;\n\n// Build command for backend\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({\n    pump_on: true,\n    pump_power: power\n});\n\nreturn msg;\n",
         "outputs": 1,
@@ -432,14 +424,14 @@
         "y": 500,
         "wires": [
             [
-                "http_command"
+                "a8e63b5e120b0412"
             ]
         ]
     },
     {
-        "id": "703e244161134280",
+        "id": "5ae6b68ad1c2c810",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Wrap leak_rate command",
         "func": "const leak_rate = Number(msg.payload);\n\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({ leak_rate });\n\nreturn msg;\n",
         "outputs": 1,
@@ -452,14 +444,14 @@
         "y": 380,
         "wires": [
             [
-                "http_command"
+                "a8e63b5e120b0412"
             ]
         ]
     },
     {
-        "id": "bf84db3570ec1ea5",
+        "id": "131eaf84f91ab309",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "leak_rate",
         "func": "msg.payload = msg.payload.leak_rate;\nreturn msg;\n",
         "outputs": 1,
@@ -472,14 +464,14 @@
         "y": 380,
         "wires": [
             [
-                "5cb648e4f6c08bcb"
+                "365b11d8f5e3c1dc"
             ]
         ]
     },
     {
-        "id": "2228b6ad57bc590a",
+        "id": "228d88becef0588a",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Extract target_cm",
         "func": "msg.payload = msg.payload.target_cm;\nreturn msg;\n",
         "outputs": 1,
@@ -492,14 +484,14 @@
         "y": 420,
         "wires": [
             [
-                "5fc66af6f253a273"
+                "54772a7c25fc8be0"
             ]
         ]
     },
     {
-        "id": "00e581b954003022",
+        "id": "dbf222233928d44a",
         "type": "function",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "Wrap target command",
         "func": "const t = Number(msg.payload);\nmsg.headers = { \"Content-Type\": \"application/json\" };\nmsg.payload = JSON.stringify({ target_cm: t });\nreturn msg;\n",
         "outputs": 1,
@@ -512,14 +504,14 @@
         "y": 420,
         "wires": [
             [
-                "http_command"
+                "a8e63b5e120b0412"
             ]
         ]
     },
     {
-        "id": "btn_pump_on",
+        "id": "5ffb356c8b0bd48c",
         "type": "ui_button",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_control",
         "order": 1,
@@ -537,17 +529,17 @@
         "topic": "",
         "topicType": "str",
         "x": 800,
-        "y": 600,
+        "y": 580,
         "wires": [
             [
-                "fn_cmd_wrap"
+                "291b526d39979cce"
             ]
         ]
     },
     {
-        "id": "btn_pump_off",
+        "id": "02e66d5f9785900d",
         "type": "ui_button",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_control",
         "order": 2,
@@ -565,17 +557,17 @@
         "topic": "",
         "topicType": "str",
         "x": 810,
-        "y": 650,
+        "y": 630,
         "wires": [
             [
-                "fn_cmd_wrap"
+                "291b526d39979cce"
             ]
         ]
     },
     {
-        "id": "8d630d049993fc88",
+        "id": "e4d21d3192fd255d",
         "type": "ui_slider",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "label": "Pump power",
         "tooltip": "",
@@ -598,9 +590,9 @@
         ]
     },
     {
-        "id": "5cb648e4f6c08bcb",
+        "id": "365b11d8f5e3c1dc",
         "type": "ui_slider",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "label": "Drain (cm/s)",
         "tooltip": "",
@@ -620,14 +612,14 @@
         "y": 380,
         "wires": [
             [
-                "703e244161134280"
+                "5ae6b68ad1c2c810"
             ]
         ]
     },
     {
-        "id": "txt_pump",
+        "id": "3f833c96c5d50917",
         "type": "ui_text",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "group": "ui_group_status",
         "order": 3,
         "width": 6,
@@ -646,9 +638,9 @@
         "wires": []
     },
     {
-        "id": "5fc66af6f253a273",
+        "id": "54772a7c25fc8be0",
         "type": "ui_numeric",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "label": "Target (cm)",
         "tooltip": "",
@@ -669,14 +661,14 @@
         "y": 420,
         "wires": [
             [
-                "00e581b954003022"
+                "dbf222233928d44a"
             ]
         ]
     },
     {
-        "id": "g_level",
+        "id": "b3132a1fe42473bb",
         "type": "ui_gauge",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_status",
         "order": 1,
@@ -687,7 +679,7 @@
         "label": "cm",
         "format": "{{value}}",
         "min": 0,
-        "max": 100,
+        "max": "100",
         "colors": [
             "#00b500",
             "#e6e600",
@@ -702,9 +694,9 @@
         "wires": []
     },
     {
-        "id": "g_pressure",
+        "id": "46ff79b211e8996a",
         "type": "ui_gauge",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_status",
         "order": 2,
@@ -730,9 +722,9 @@
         "wires": []
     },
     {
-        "id": "g_s_low",
+        "id": "3125053d17bc0709",
         "type": "ui_gauge",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_sensors",
         "order": 1,
@@ -758,9 +750,9 @@
         "wires": []
     },
     {
-        "id": "g_s_med",
+        "id": "1f6ccc93c44946e7",
         "type": "ui_gauge",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_sensors",
         "order": 2,
@@ -786,9 +778,9 @@
         "wires": []
     },
     {
-        "id": "g_s_high",
+        "id": "f4e21688aa11e0ba",
         "type": "ui_gauge",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_sensors",
         "order": 3,
@@ -814,9 +806,9 @@
         "wires": []
     },
     {
-        "id": "chart_level",
+        "id": "226df10d057e594b",
         "type": "ui_chart",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_control",
         "order": 7,
@@ -858,9 +850,9 @@
         ]
     },
     {
-        "id": "f997c5fd76e87d6e",
+        "id": "c41d4c8f123869b8",
         "type": "ui_chart",
-        "z": "tab_tanksim",
+        "z": "751db66ae21c7d98",
         "name": "",
         "group": "ui_group_control",
         "order": 4,
@@ -899,6 +891,26 @@
         "y": 340,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "a8e63b5e120b0412",
+        "type": "function",
+        "z": "751db66ae21c7d98",
+        "name": "SECLOG",
+        "func": "// Security-focused audit log for control actions (Node-RED -> tank-sim)\n// Logs only commands (not every /state poll)\n\n// Try to capture the command payload in a consistent way\nconst payload = msg.payload || {};\nconst cmdType =\n  payload.type || payload.command || payload.action || msg.topic || \"command\";\n\n// Minimal but useful audit event\nconst evt = {\n  ts: new Date().toISOString(),\n  component: \"node-red\",\n  event_type: \"control_action\",\n  cmd: cmdType,\n  payload: payload,\n  flow: \"TankSim\",\n  src_node: \"SECLOG: command audit\"\n};\n\nevt.marker = \"SECLOG_MARKER_123\";\n\n// Write JSON to Node-RED logs (stdout)\nnode.warn(JSON.stringify(evt));\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1340,
+        "y": 540,
+        "wires": [
+            [
+                "3cb832c68ce2cd85"
+            ]
         ]
     }
 ]
