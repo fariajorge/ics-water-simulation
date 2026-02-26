@@ -1,0 +1,17 @@
+- type: filestream
+  id: docker-containers
+  enabled: true
+  paths:
+    - /var/lib/docker/containers/*/*.log
+
+  parsers:
+    - ndjson:
+        target: ""
+        add_error_key: true
+        overwrite_keys: true
+
+  processors:
+    - add_fields:
+        target: ""
+        fields:
+          log_source: docker

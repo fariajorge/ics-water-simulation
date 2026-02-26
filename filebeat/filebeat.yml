@@ -1,0 +1,30 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: container
+  enabled: true
+  paths:
+    - "/var/lib/docker/containers/*/*.log"
+  
+  # --- THE FIX FOR \x00 ERRORS ---
+  encoding: utf-8
+  # This helps Filebeat skip the binary 'null' characters
+  null_terminator: true 
+  # -------------------------------
+
+  fields:
+    event_source: ics_simulation
+  processors:
+    - add_docker_metadata: ~
+    - decode_json_fields:
+        fields: ["message"]
+        target: "json"
+        overwrite_keys: true
+
+# Keep the rest of your default config here...
+filebeat.config.inputs:
+  enabled: true
+  path: /etc/filebeat/inputs.d/*.yml
+
+# ================================== Outputs ===================================
+output.logstash:
+  hosts: ["localhost:5044"]
