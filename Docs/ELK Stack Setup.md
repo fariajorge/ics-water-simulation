@@ -77,11 +77,6 @@ Pipeline files are located in:
 
     elk/logstash/pipeline/
 
-After editing:
-
-``` bash
-docker compose restart logstash
-```
 
 ------------------------------------------------------------------------
 
