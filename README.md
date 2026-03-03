@@ -55,7 +55,15 @@ git clone <repository-url>
 cd ics-water-simulation
 ```
 
-### 2. Create the `.env` file
+### 2. Fix Node-RED permissions
+
+Docker creates the Node-RED data folder with root-only permissions on first clone. Fix this before starting the containers:
+
+```bash
+sudo chown -R $USER:$USER ~/ics-water-simulation/node-red-flows
+```
+
+### 3. Create the `.env` file
 
 ```bash
 nano .env
@@ -77,7 +85,7 @@ docker exec -it nuc-kibana bin/kibana-encryption-keys generate
 
 > The `.env` file is in `.gitignore` and will never be committed.
 
-### 3. Start the lab
+### 4. Start the lab
 
 ```bash
 docker compose up -d --build
@@ -85,7 +93,13 @@ docker compose up -d --build
 
 Wait about 60 seconds for Elasticsearch and Kibana to fully initialize.
 
-### 4. Start Suricata
+### 5. Import Node-RED flows
+
+Open Node-RED at `http://localhost:1880`, go to the hamburger menu (top right) → **Import**, and select `node-red-flows/flows_simulated.json`. Click **Deploy** when done.
+
+> See `Docs/NodeRED_Setup.md` for detailed instructions with screenshots.
+
+### 6. Start Suricata
 
 ```bash
 sudo /usr/local/bin/suricata-start.sh
@@ -93,7 +107,7 @@ sudo /usr/local/bin/suricata-start.sh
 
 > This script auto-detects the Docker bridge interfaces and configures Suricata. Run it every time Docker is restarted. See `Docs/Suricata_IDS_Setup.md` for setup instructions.
 
-### 5. Verify everything is running
+### 7. Verify everything is running
 
 ```bash
 # Check all containers are up
@@ -139,9 +153,10 @@ ics-water-simulation/
 ├── README.md
 ├── Attack/                     # Attack scripts
 ├── Docs/                       # Lab documentation
-│   ├── Suricata_IDS_Setup.md   # Suricata installation and config guide
-│   ├── ICS_WaterTank_Lab.md    # Lab exercises
-│   └── Exercise_Example_PingFlood.md  # Worked example solution
+│   ├── Suricata_IDS_Setup.md         # Suricata installation and config guide
+│   ├── NodeRED_Setup.md              # Node-RED first time setup guide
+│   ├── ICS_WaterTank_Lab.md          # Lab exercises
+│   └── Exercise_Example_PingFlood.md # Worked example solution
 ├── elk/                        # ELK stack config
 ├── filebeat/                   # Filebeat config
 ├── hmi/                        # NGINX proxy config
@@ -157,6 +172,7 @@ ics-water-simulation/
 | Document | Description |
 |---|---|
 | `Docs/Suricata_IDS_Setup.md` | How to install and configure Suricata on the VM host |
+| `Docs/NodeRED_Setup.md` | Node-RED first time setup — permissions fix and flow import |
 | `Docs/ICS_WaterTank_Lab.md` | Lab exercises — attack scenarios, Suricata rules, ELK analysis |
 | `Docs/Exercise_Example_PingFlood.md` | Complete worked example — ping flood attack, detection rule, and incident report |
 
@@ -167,6 +183,12 @@ ics-water-simulation/
 **Containers not starting:**
 ```bash
 docker compose logs
+```
+
+**Node-RED permission errors on first run:**
+```bash
+sudo chown -R $USER:$USER ~/ics-water-simulation/node-red-flows
+docker compose restart
 ```
 
 **Suricata not detecting traffic after Docker restart:**
