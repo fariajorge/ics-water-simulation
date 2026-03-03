@@ -128,7 +128,7 @@ docker ps | grep node-red
 If it is not listed, start the containers:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
 **Flows imported but nodes show red error indicators**
