@@ -12,13 +12,6 @@ sudo apt upgrade -y
 sudo apt install suricata -y
 ```
 
-Verify:
-
-```bash
-suricata --build-info
-sudo systemctl status suricata --no-pager
-```
-
 ---
 
 ## Phase 2 — Configure suricata.yaml
