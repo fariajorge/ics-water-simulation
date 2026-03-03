@@ -4,23 +4,6 @@ This document covers the installation and configuration of Suricata on the Ubunt
 
 ---
 
-## Phase 0 — Find Your Docker Bridge Interfaces
-
-> Bridge names are unique per VM. Never copy them from another machine — always run these commands first.
-
-```bash
-# Set bridge names as variables for use throughout this setup
-OT_BRIDGE=$(docker network inspect ics-water-simulation_ot_hmi_net --format '{{.Id}}' | cut -c1-12 | awk '{print "br-" $1}')
-RM_BRIDGE=$(docker network inspect ics-water-simulation_rm_net --format '{{.Id}}' | cut -c1-12 | awk '{print "br-" $1}')
-
-echo "OT bridge: $OT_BRIDGE"
-echo "RM bridge: $RM_BRIDGE"
-```
-
-Keep these values — you will need them in every step below.
-
----
-
 ## Phase 1 — Install Suricata
 
 ```bash
@@ -38,24 +21,7 @@ sudo systemctl status suricata --no-pager
 
 ---
 
-## Phase 2 — Prepare the Bridge Interfaces
-
-Docker bridge interfaces require promiscuous mode and bridge netfilter to be enabled before Suricata can capture traffic on them.
-
-```bash
-# Enable promiscuous mode
-sudo ip link set $OT_BRIDGE promisc on
-sudo ip link set $RM_BRIDGE promisc on
-
-# Enable bridge netfilter
-sudo modprobe br_netfilter
-sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
-sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
-```
-
----
-
-## Phase 3 — Configure suricata.yaml
+## Phase 2 — Configure suricata.yaml
 
 ```bash
 sudo nano /etc/suricata/suricata.yaml
@@ -63,7 +29,7 @@ sudo nano /etc/suricata/suricata.yaml
 
 ### af-packet section
 
-Find the `af-packet:` section and replace it with your bridge names:
+Find the `af-packet:` section and replace it with the following:
 
 ```yaml
 af-packet:
@@ -82,7 +48,7 @@ af-packet:
 
 ### pcap section
 
-Find the `pcap:` section and replace it with your bridge names:
+Find the `pcap:` section and replace it with the following:
 
 ```yaml
 pcap:
@@ -95,16 +61,9 @@ pcap:
 
 > `checksum-checks: no` is required — Docker virtual interfaces use offloaded checksums that Suricata cannot verify.
 
-### Restart Suricata
-
-```bash
-sudo systemctl restart suricata
-sudo systemctl status suricata --no-pager
-```
-
 ---
 
-## Phase 4 — Add the Local Rules File
+## Phase 3 — Add the Local Rules File
 
 Verify `local.rules` is referenced in suricata.yaml:
 
@@ -112,13 +71,7 @@ Verify `local.rules` is referenced in suricata.yaml:
 grep -n "local.rules" /etc/suricata/suricata.yaml
 ```
 
-If the output is empty, add it manually:
-
-```bash
-sudo nano /etc/suricata/suricata.yaml
-```
-
-Find the `rule-files:` section and add:
+If the output is empty, open suricata.yaml, find the `rule-files:` section and add:
 
 ```yaml
 rule-files:
@@ -133,35 +86,7 @@ sudo touch /etc/suricata/rules/local.rules
 
 ---
 
-## Phase 5 — Verify Suricata is Capturing Traffic
-
-### Check interfaces are registered
-
-```bash
-sudo suricatasc -c iface-list
-```
-
-Both bridge interfaces should appear in the output.
-
-### Check packet counters
-
-```bash
-sudo suricatasc -c dump-counters | python3 -m json.tool | grep '"pkts"' | head -5
-```
-
-Generate some traffic then run the command again — counters must be increasing. If they stay at 0, Suricata is not capturing on the right interface.
-
-### Verify with tcpdump
-
-```bash
-sudo tcpdump -i $OT_BRIDGE -c 5 host 10.10.10.52
-```
-
-If tcpdump sees traffic but Suricata counters stay at 0, re-check the `af-packet` and `pcap` sections in suricata.yaml.
-
----
-
-## Phase 6 — Allow Logstash to Read Logs
+## Phase 4 — Allow Logstash to Read Logs
 
 Since Logstash runs in Docker it reads `eve.json` via a bind mount. Make the log directory readable:
 
@@ -169,6 +94,66 @@ Since Logstash runs in Docker it reads `eve.json` via a bind mount. Make the log
 sudo chmod o+rx /var/log/suricata
 sudo chmod o+r /var/log/suricata/eve.json
 ```
+
+---
+
+## Phase 5 — Create the Startup Script
+
+> **Why this is needed:** Docker bridge interface names (e.g. `br-cd88b0e118f3`) are generated from the network ID and change every time Docker recreates the networks. This script auto-detects the current bridge names and updates Suricata's config before starting it — so you never have to manually edit `suricata.yaml` again.
+
+Create the script:
+
+```bash
+sudo nano /usr/local/bin/suricata-start.sh
+```
+
+Paste the following:
+
+```bash
+#!/bin/bash
+# Auto-detect Docker bridge interfaces and start Suricata
+
+OT_BRIDGE=$(docker network inspect ics-water-simulation_ot_hmi_net --format '{{.Id}}' | cut -c1-12 | awk '{print "br-" $1}')
+RM_BRIDGE=$(docker network inspect ics-water-simulation_rm_net --format '{{.Id}}' | cut -c1-12 | awk '{print "br-" $1}')
+
+echo "OT bridge: $OT_BRIDGE"
+echo "RM bridge: $RM_BRIDGE"
+
+# Update suricata.yaml with current bridge names
+sudo sed -i "s/br-[a-f0-9]\{12\}/$OT_BRIDGE/g" /etc/suricata/suricata.yaml
+sudo sed -i "s/br-[a-f0-9]\{12\}/$RM_BRIDGE/g" /etc/suricata/suricata.yaml
+
+# Enable promiscuous mode on bridges
+sudo ip link set $OT_BRIDGE promisc on
+sudo ip link set $RM_BRIDGE promisc on
+
+# Enable bridge netfilter
+sudo modprobe br_netfilter
+sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
+sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
+
+# Restart Suricata
+sudo systemctl restart suricata
+sudo systemctl status suricata --no-pager
+```
+
+Make it executable:
+
+```bash
+sudo chmod +x /usr/local/bin/suricata-start.sh
+```
+
+---
+
+## Starting Suricata
+
+Every time you start the lab or after a Docker restart, run:
+
+```bash
+sudo /usr/local/bin/suricata-start.sh
+```
+
+This handles bridge detection, promiscuous mode, and Suricata restart automatically.
 
 ---
 
