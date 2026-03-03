@@ -29,22 +29,20 @@ sudo nano /etc/suricata/suricata.yaml
 
 ### af-packet section
 
-Find the `af-packet:` section and replace it with the following:
+Find the `af-packet:` section and replace it with the following. Use your actual bridge IDs from `docker network ls`:
 
 ```yaml
 af-packet:
-  - interface: br-OT_BRIDGE      # replace with your ot_hmi_net bridge
+  - interface: br-xxxxxxxxxxxx    # ot_hmi_net
     cluster-id: 99
     cluster-type: cluster_flow
     defrag: yes
-  - interface: br-RM_BRIDGE      # replace with your rm_net bridge
+  - interface: br-xxxxxxxxxxxx    # rm_net
     cluster-id: 98
     cluster-type: cluster_flow
     defrag: yes
   - interface: default
 ```
-
-> Do NOT use `eth0` or `enp0s3` — those are the VM's internet interface and cannot see Docker container traffic.
 
 ### pcap section
 
@@ -52,14 +50,34 @@ Find the `pcap:` section and replace it with the following:
 
 ```yaml
 pcap:
-  - interface: br-OT_BRIDGE      # replace with your ot_hmi_net bridge
+  - interface: br-xxxxxxxxxxxx    # ot_hmi_net
     checksum-checks: no
-  - interface: br-RM_BRIDGE      # replace with your rm_net bridge
+  - interface: br-xxxxxxxxxxxx    # rm_net
     checksum-checks: no
   - interface: default
 ```
 
+> **The comments `# ot_hmi_net` and `# rm_net` are required** — the startup script uses them as anchors to update the bridge IDs automatically. Do not remove them.
+
+> Do NOT use `eth0` or `enp0s3` — those are the VM's internet interface and cannot see Docker container traffic.
+
 > `checksum-checks: no` is required — Docker virtual interfaces use offloaded checksums that Suricata cannot verify.
+
+### Find your bridge IDs
+
+```bash
+docker network ls | grep ics-water-simulation
+```
+
+Example output:
+```
+79565f873712   ics-water-simulation_ot_hmi_net   bridge    local
+b14454781180   ics-water-simulation_rm_net       bridge    local
+```
+
+Prefix with `br-` to get the interface name: `br-79565f873712`, `br-b14454781180`.
+
+> **This is a one-time manual step.** After this, the startup script handles all future updates automatically.
 
 ---
 
@@ -99,7 +117,7 @@ sudo chmod o+r /var/log/suricata/eve.json
 
 ## Phase 5 — Create the Startup Script
 
-> **Why this is needed:** Docker bridge interface names (e.g. `br-cd88b0e118f3`) are generated from the network ID and change every time Docker recreates the networks. This script auto-detects the current bridge names and updates Suricata's config before starting it — so you never have to manually edit `suricata.yaml` again.
+> **Why this is needed:** Docker bridge interface names change every time Docker recreates the networks. This script auto-detects the current bridge names and updates Suricata's config before starting — so after the first-time manual setup in Phase 2, you never need to touch `suricata.yaml` again.
 
 Create the script:
 
@@ -119,9 +137,12 @@ RM_BRIDGE=$(docker network inspect ics-water-simulation_rm_net --format '{{.Id}}
 echo "OT bridge: $OT_BRIDGE"
 echo "RM bridge: $RM_BRIDGE"
 
-# Update suricata.yaml with current bridge names
-sudo sed -i "s/br-[a-f0-9]\{12\}/$OT_BRIDGE/g" /etc/suricata/suricata.yaml
-sudo sed -i "s/br-[a-f0-9]\{12\}/$RM_BRIDGE/g" /etc/suricata/suricata.yaml
+# Update suricata.yaml using comment anchors to target the correct lines
+# This works because the comments # ot_hmi_net and # rm_net never change
+sudo sed -i "s/interface: br-[a-f0-9]*.*# ot_hmi_net/interface: $OT_BRIDGE    # ot_hmi_net/" /etc/suricata/suricata.yaml
+sudo sed -i "s/interface: br-[a-f0-9]*.*# rm_net/interface: $RM_BRIDGE    # rm_net/" /etc/suricata/suricata.yaml
+
+echo "suricata.yaml updated"
 
 # Enable promiscuous mode on bridges
 sudo ip link set $OT_BRIDGE promisc on
@@ -153,7 +174,29 @@ Every time you start the lab or after a Docker restart, run:
 sudo /usr/local/bin/suricata-start.sh
 ```
 
-This handles bridge detection, promiscuous mode, and Suricata restart automatically.
+This handles bridge detection, promiscuous mode, and Suricata restart automatically. Safe to run multiple times.
+
+---
+
+## Verifying Suricata is Capturing Traffic
+
+```bash
+# Check interfaces are registered
+sudo suricatasc -c iface-list
+
+# Check rules are loaded
+sudo suricatasc -c ruleset-stats
+
+# Watch alerts in real time
+tail -f /var/log/suricata/fast.log
+
+# Check alerts in Elasticsearch
+curl -s "http://localhost:9200/suricata-eve-*/_search?pretty" -H "Content-Type: application/json" -d '{
+  "query": { "term": { "event_type": "alert" } },
+  "size": 5,
+  "sort": [{ "@timestamp": { "order": "desc" } }]
+}'
+```
 
 ---
 
