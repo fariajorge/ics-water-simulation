@@ -34,8 +34,8 @@ docker compose up -d
 
 Once the containers are running, open Node-RED in your browser. Either URL works:
 
-- `http://localhost:1880`
-- `http://10.10.10.52:1880`
+- `http://localhost:8080`
+- `http://10.10.10.52:8080`
 
 You should see the Node-RED editor — a blank canvas with a toolbar at the top and a panel of nodes on the left.
 
