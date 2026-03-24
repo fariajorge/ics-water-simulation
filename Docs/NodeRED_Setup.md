@@ -31,7 +31,22 @@ docker compose up -d --build
 
 ---
 
-## Step 2 — Open Node-RED
+## Step 2 — Install Flow Dependencies
+
+The lab flows require the `node-red-dashboard` package. Install it through the Node-RED palette manager:
+
+1. Open Node-RED in your browser (`http://localhost:8080` or `http://10.10.10.52:8080`)
+2. Click the **hamburger menu** (three horizontal lines) in the top-right corner
+3. Select **Manage palette**
+4. Click the **Install** tab
+5. Search for `node-red-dashboard`
+6. Click **Install** next to the package and wait for it to complete
+
+> Node-RED will reload automatically once the package is installed.
+
+---
+
+## Step 3 — Open Node-RED
 
 Once the containers are running, open Node-RED in your browser. Either URL works:
 
@@ -42,7 +57,7 @@ You should see the Node-RED editor — a blank canvas with a toolbar at the top 
 
 ---
 
-## Step 3 — Import the Lab Flows
+## Step 4 — Import the Lab Flows
 
 The lab flows are pre-built and stored in the file `node-red-flows/flows_simulated.json`. You need to import this file into Node-RED once.
 
@@ -79,17 +94,15 @@ Click the red **Deploy** button in the top-right corner to activate the flows.
 
 ---
 
-## Step 4 — Verify the Flows are Running
+## Step 5 — Verify the Flows are Running
 
 After deploying you should see the flows on the canvas with green status indicators under the nodes showing they are connected and active.
 
 To confirm the lab simulation is running, check the tank simulator is responding:
 
 ```bash
-curl http://10.10.10.60:5000/tank
+http://localhost:8080/ui
 ```
-
-You should get a JSON response with the current tank state.
 
 ---
 
