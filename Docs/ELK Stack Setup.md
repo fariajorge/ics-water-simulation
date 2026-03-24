@@ -161,7 +161,6 @@ to:
 sudo filebeat test config -e
 sudo filebeat test output
 
-sudo systemctl reset-failed filebeat
 sudo systemctl restart filebeat
 sudo systemctl status filebeat --no-pager
 ```
