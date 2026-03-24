@@ -40,36 +40,68 @@ OT/HMI Network (10.10.10.0/24)          RM Network (10.10.20.0/24)
 ## Prerequisites
 
 - Ubuntu VM (tested on Ubuntu 24)
-- Docker and Docker Compose installed
-- Suricata installed on the VM host (see `Docs/Suricata_IDS_Setup.md`)
 - Minimum 4GB RAM recommended (ELK stack is memory intensive)
 
 ---
 
-## Quick Start
+## Installation Guide
 
-### 1. Clone the repository
+### Step 1 — Clone the repository
 
 ```bash
 git clone <repository-url>
 cd ics-water-simulation
 ```
 
-### 2. Fix Node-RED permissions
+---
 
-Docker creates the Node-RED data folder with root-only permissions on first clone. Fix this before starting the containers:
+### Step 2 — Install Docker and Docker Compose
+
+Docker is the foundation of the lab — all services run as containers. Follow the full installation instructions in `Docs/Docker Installation Guide.md`.
+
+Once installed, verify Docker is working:
 
 ```bash
-sudo chown -R $USER:$USER ~/ics-water-simulation/node-red-flows
+docker --version
+docker compose version
 ```
 
-### 3. Create the `.env` file
+Then start the containers straight away so Docker begins pulling all images in the background while you continue with the rest of the setup:
+
+```bash
+cd ics-water-simulation
+docker compose up -d --build
+```
+
+> This may take several minutes on first run depending on your connection. You can continue with the remaining steps while it pulls.
+
+---
+
+### Step 3 — Set up Node-RED
+
+Node-RED acts as the RevPi Twin, simulating the PLC logic that controls the water tank. The setup involves fixing folder permissions, installing the dashboard package, and importing the lab flows.
+
+Follow the full setup instructions in `Docs/NodeRED_Setup.md`.
+
+**Fix permissions on first VM boot** — when the VM starts for the first time, Docker creates the Node-RED data folder with root-only permissions. This must be fixed before starting the containers or Node-RED will not work correctly:
+
+```bash
+sudo chown -R $USER:$USER ~/ics-water-simulation/revpi-twin
+```
+
+---
+
+### Step 4 — Set up the ELK Stack
+
+The ELK stack (Elasticsearch, Logstash, Kibana) is used for log ingestion, storage, and analysis. Logstash collects Suricata alerts and forwards them to Elasticsearch, where they can be visualised and queried in Kibana.
+
+Follow the full setup instructions in `Docs/ELK Stack Setup.md`.
+
+After the stack is running, create the `.env` file with your Kibana encryption keys (required for alerting):
 
 ```bash
 nano .env
 ```
-
-Add your Kibana encryption keys (required for alerting):
 
 ```env
 KIBANA_ENCRYPTION_KEY=your_key_here
@@ -85,29 +117,37 @@ docker exec -it nuc-kibana bin/kibana-encryption-keys generate
 
 > The `.env` file is in `.gitignore` and will never be committed.
 
-### 4. Start the lab
+---
+
+### Step 5 — Install Suricata IDS
+
+Suricata runs directly on the VM host (not in Docker) and monitors both Docker bridge interfaces for suspicious traffic. It is the primary intrusion detection component of the lab.
+
+Follow the full setup instructions in `Docs/Suricata IDS Setup.md`.
+
+---
+
+### Step 6 — Start the lab
+
+Once all dependencies are installed, confirm all containers are running. If they are not, bring them up:
 
 ```bash
 docker compose up -d --build
 ```
 
-Wait about 60 seconds for Elasticsearch and Kibana to fully initialize.
+Wait about 60 seconds for Elasticsearch and Kibana to fully initialize if they were just started.
 
-### 5. Import Node-RED flows
-
-Open Node-RED at `http://localhost:1880`, go to the hamburger menu (top right) → **Import**, and select `node-red-flows/flows_simulated.json`. Click **Deploy** when done.
-
-> See `Docs/NodeRED_Setup.md` for detailed instructions with screenshots.
-
-### 6. Start Suricata
+Then start Suricata:
 
 ```bash
 sudo /usr/local/bin/suricata-start.sh
 ```
 
-> This script auto-detects the Docker bridge interfaces and configures Suricata. Run it every time Docker is restarted. See `Docs/Suricata_IDS_Setup.md` for setup instructions.
+> This script auto-detects the Docker bridge interfaces and configures Suricata. Run it every time Docker is restarted — Docker recreates the bridge interfaces on every restart and Suricata needs to be updated with the new names.
 
-### 7. Verify everything is running
+---
+
+### Step 7 — Verify everything is running
 
 ```bash
 # Check all containers are up
@@ -153,10 +193,11 @@ ics-water-simulation/
 ├── README.md
 ├── Attack/                     # Attack scripts
 ├── Docs/                       # Lab documentation
-│   ├── Suricata_IDS_Setup.md         # Suricata installation and config guide
+│   ├── Docker Installation Guide.md  # Docker and Docker Compose installation guide
+│   ├── ELK Stack Setup.md            # ELK stack installation and config guide
 │   ├── NodeRED_Setup.md              # Node-RED first time setup guide
-│   ├── ICS_WaterTank_Lab.md          # Lab exercises
-│   └── Exercise_Example_PingFlood.md # Worked example solution
+│   ├── Suricata IDS Setup.md         # Suricata installation and config guide
+│   └── ICS_WaterTank_Lab.md          # Lab exercises
 ├── elk/                        # ELK stack config
 ├── filebeat/                   # Filebeat config
 ├── hmi/                        # NGINX proxy config
@@ -171,8 +212,10 @@ ics-water-simulation/
 
 | Document | Description |
 |---|---|
-| `Docs/Suricata_IDS_Setup.md` | How to install and configure Suricata on the VM host |
+| `Docs/Docker Installation Guide.md` | How to install Docker and Docker Compose |
+| `Docs/ELK Stack Setup.md` | How to install and configure the ELK stack |
 | `Docs/NodeRED_Setup.md` | Node-RED first time setup — permissions fix and flow import |
+| `Docs/Suricata IDS Setup.md` | How to install and configure Suricata on the VM host |
 | `Docs/ICS_WaterTank_Lab.md` | Lab exercises — attack scenarios, Suricata rules, ELK analysis |
 | `Docs/Exercise_Example_PingFlood.md` | Complete worked example — ping flood attack, detection rule, and incident report |
 
