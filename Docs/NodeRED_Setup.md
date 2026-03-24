@@ -9,23 +9,24 @@ This document covers how to fix permissions, open Node-RED for the first time, a
 
 When you clone the project and start the containers for the first time, Docker creates the Node-RED data folder with root-only permissions. This must be fixed before Node-RED will work correctly.
 
-Find the path to the Node-RED data folder in your cloned project (it will be inside the `node-red-flows` folder) and run:
+Find the path to the Node-RED data folder in your cloned project (it will be inside the `revpi-twin` folder) and run:
 
 ```bash
-sudo chown -R $USER:$USER /path/to/ics-water-simulation/node-red-flows
+sudo chown -R $USER:$USER /path/to/ics-water-simulation/revpi-twin
 ```
 
 Replace `/path/to/` with your actual clone location. For example if you cloned into your home folder:
 
 ```bash
-sudo chown -R $USER:$USER ~/ics-water-simulation/node-red-flows
+sudo chown -R $USER:$USER ~/ics-water-simulation/revpi-twin
 ```
 
-Then start the containers if not already running:
+Then restart the containers if not already running:
 
 ```bash
 cd ~/ics-water-simulation
-docker compose up -d
+docker compose down
+docker compose up -d --build
 ```
 
 ---
