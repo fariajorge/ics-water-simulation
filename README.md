@@ -196,8 +196,7 @@ ics-water-simulation/
 │   ├── Docker Installation Guide.md  # Docker and Docker Compose installation guide
 │   ├── ELK Stack Setup.md            # ELK stack installation and config guide
 │   ├── NodeRED_Setup.md              # Node-RED first time setup guide
-│   ├── Suricata IDS Setup.md         # Suricata installation and config guide
-│   └── ICS_WaterTank_Lab.md          # Lab exercises
+│   └── Suricata IDS Setup.md         # Suricata installation and config guide
 ├── elk/                        # ELK stack config
 ├── filebeat/                   # Filebeat config
 ├── hmi/                        # NGINX proxy config
