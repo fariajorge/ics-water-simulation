@@ -131,30 +131,27 @@ sudo mv /etc/filebeat/modules.d/system.yml.disabled /etc/filebeat/modules.d/syst
 ---
 
 ### Configure filebeat.yml
-
 ```bash
 sudo nano /etc/filebeat/filebeat.yml
 ```
 
-Copy configuration from `filebeat/filebeat.yml` inside the project repository into this file, then save and exit (`Ctrl+X` → `Y` → `Enter`).
+Open the file `filebeat/filebeat.yml` from the project repository, copy its entire contents, paste them into the editor replacing everything that is already there, then save and exit (`Ctrl+X` → `Y` → `Enter`).
 
 ---
 
 ### Docker Container Logs Input
 
 Create the `inputs.d` folder inside the Filebeat config directory:
-
 ```bash
 sudo mkdir -p /etc/filebeat/inputs.d
 ```
 
 Then create the configuration file:
-
 ```bash
 sudo nano /etc/filebeat/inputs.d/docker-container.yml
 ```
 
-Copy and paste the contents from `filebeat/inputs.d/docker-container.yml` in the project repository into this file, then save and exit (`Ctrl+X` → `Y` → `Enter`).
+Open the file `filebeat/inputs.d/docker-container.yml` from the project repository, copy its entire contents, paste them into the editor, then save and exit (`Ctrl+X` → `Y` → `Enter`).
 
 ---
 
